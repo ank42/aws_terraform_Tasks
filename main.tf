@@ -42,13 +42,13 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "nat" {
-  count = 2
+  count = length(var.private_subnet_ids)
 
   vpc = true
 }
 
 resource "aws_nat_gateway" "main" {
-  count = 2
+  count = length(var.private_subnet_ids)
 
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.Public[count.index].id
@@ -72,7 +72,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table" "private" {
-  count = 2
+  count = length(var.private_subnet_ids)
 
   vpc_id = aws_vpc.main.id
 
@@ -86,14 +86,16 @@ resource "aws_route_table" "private" {
   }
 }
 resource "aws_route_table_association" "public" {
-  count = 2
+  count = length(var.private_subnet_ids)
 
   subnet_id      = aws_subnet.Public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 resource "aws_route_table_association" "private" {
-  count = 2
+  count = length(var.private_subnet_ids)
 
   subnet_id      = aws_subnet.Private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
+
+
