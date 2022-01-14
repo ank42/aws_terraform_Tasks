@@ -1,101 +1,29 @@
-
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-}
-
-variable "public_subnet_ids" {
-  default = ["10.0.0.0/24", "10.0.1.0/24"]
-}
-
-resource "aws_subnet" "Public" {
-  count = length(var.public_subnet_ids)
-
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.public_subnet_ids[count.index]
-
-  tags = {
-    Name = "public${count.index}"
-  }
-}
-
-variable "private_subnet_ids" {
-  default = ["10.0.2.0/24", "10.0.3.0/24"]
-}
-
-resource "aws_subnet" "Private" {
-  count = length(var.private_subnet_ids)
-
-  vpc_id     = aws_vpc.main.id
-  cidr_block = var.private_subnet_ids[count.index]
-
-  tags = {
-    Name = "private${count.index}"
-  }
-}
-
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "main"
-  }
-}
-
-resource "aws_eip" "nat" {
-  count = length(var.private_subnet_ids)
-
-  vpc = true
-}
-
-resource "aws_nat_gateway" "main" {
-  count = length(var.private_subnet_ids)
-
-  allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = aws_subnet.Public[count.index].id
-
-  tags = {
-    Name = "main"
-  }
-}
-
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
+resource "aws_s3_bucket" "storage" {
+  bucket = "my-bucket-for-tf-state"
+  acl    = "private"
+  versioning {
+    enabled = true
   }
 
   tags = {
-    Name = "public"
+    Name        = "my-bucket"
+    Environment = "Dev"
   }
 }
 
-resource "aws_route_table" "private" {
-  count = length(var.private_subnet_ids)
+resource "aws_dynamodb_table" "statestorage" {
+  name           = "for_state_lock"
+  hash_key       = "LockID"
+  read_capacity  = "8"
+  write_capacity = "8"
 
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main[count.index].id
+  attribute {
+    name = "LockID"
+    type = "S"
   }
 
   tags = {
-    Name = "private${count.index}"
+    Name = "StateLock"
   }
+  depends_on = [aws_s3_bucket.storage]
 }
-resource "aws_route_table_association" "public" {
-  count = length(var.private_subnet_ids)
-
-  subnet_id      = aws_subnet.Public[count.index].id
-  route_table_id = aws_route_table.public.id
-}
-resource "aws_route_table_association" "private" {
-  count = length(var.private_subnet_ids)
-
-  subnet_id      = aws_subnet.Private[count.index].id
-  route_table_id = aws_route_table.private[count.index].id
-}
-
-
