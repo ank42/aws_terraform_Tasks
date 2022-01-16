@@ -14,6 +14,7 @@ resource "aws_instance" "Dev" {
   subnet_id       = aws_subnet.Public[0].id
   security_groups = [aws_security_group.main.id]
   key_name        = "MyKeyPair"
+  associate_public_ip_address = true
 
   tags = {
     Name = "l1"
