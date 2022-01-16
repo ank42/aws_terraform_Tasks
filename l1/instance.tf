@@ -1,8 +1,8 @@
 resource "aws_instance" "Dev" {
-  ami           = "ami-08e4e35cccc6189f4"
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.Public0.id
-  security_groups = aws_security_group.main.id
+  ami             = "ami-08e4e35cccc6189f4"
+  instance_type   = "t2.micro"
+  subnet_id       = aws_subnet.Public[0].id
+  security_groups = [aws_security_group.main.id]
 
   tags = {
     Name = "l1"
