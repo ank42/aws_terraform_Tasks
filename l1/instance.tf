@@ -15,6 +15,13 @@ resource "aws_instance" "Dev" {
   security_groups = [aws_security_group.main.id]
   key_name        = "MyKeyPair"
   associate_public_ip_address = true
+  user_data = <<EOF
+#!/bin/bash
+sudo yum update -y
+sudo yum install -y httpd
+sudo systemctl start httpd && sudo systemctl enable httpd
+
+EOF
 
   tags = {
     Name = "l1"
