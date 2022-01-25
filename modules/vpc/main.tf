@@ -1,6 +1,10 @@
 
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr
+}
+
+variable "public_subnet_ids" {
+  default = ["10.0.0.0/24", "10.0.1.0/24"]
 }
 
 resource "aws_subnet" "Public" {
@@ -12,6 +16,10 @@ resource "aws_subnet" "Public" {
   tags = {
     Name = "public${count.index}"
   }
+}
+
+variable "private_subnet_ids" {
+  default = ["10.0.2.0/24", "10.0.3.0/24"]
 }
 
 resource "aws_subnet" "Private" {
@@ -89,5 +97,3 @@ resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.Private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
-
-
