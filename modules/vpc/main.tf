@@ -3,9 +3,6 @@ resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 }
 
-variable "public_subnet_ids" {
-  default = ["10.0.0.0/24", "10.0.1.0/24"]
-}
 
 resource "aws_subnet" "Public" {
   count = length(var.public_subnet_ids)
@@ -18,9 +15,6 @@ resource "aws_subnet" "Public" {
   }
 }
 
-variable "private_subnet_ids" {
-  default = ["10.0.2.0/24", "10.0.3.0/24"]
-}
 
 resource "aws_subnet" "Private" {
   count = length(var.private_subnet_ids)
