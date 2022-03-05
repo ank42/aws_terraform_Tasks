@@ -1,7 +1,7 @@
 #configure security group
 resource "aws_security_group" "alb_sg" {
   name   = "alb_sg"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -36,7 +36,8 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets = [data.terraform_remote_state.level1.outputs.public_subnet_id[1],data.terraform_remote_state.level1.outputs.public_subnet_id[0] ]
+  subnets            = var.subnet_ids
+
   tags = {
     Name = "custom-alb"
   }
@@ -49,7 +50,7 @@ resource "aws_alb_target_group" "albtg" {
   name     = "albtg"
   port     = 80
   protocol = "HTTP"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id = var.vpc_id
 
   health_check {
     port     = 80
@@ -65,6 +66,6 @@ resource "aws_alb_target_group" "albtg" {
 
 resource "aws_lb_target_group_attachment" "test" {
   target_group_arn = aws_alb_target_group.albtg.arn
-  target_id        = data.terraform_remote_state.level1.outputs.instance
+  target_id        = var.instance_id
   port             = 80
 }
