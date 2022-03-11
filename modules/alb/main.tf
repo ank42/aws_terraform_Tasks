@@ -42,7 +42,18 @@ resource "aws_lb" "alb" {
   }
 }
 
+#Listener 
+resource "aws_lb_listener" "front_end" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
 
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.albtg.arn
+  }
+  
+}
 
 #create target groups
 resource "aws_alb_target_group" "albtg" {
@@ -63,8 +74,11 @@ resource "aws_alb_target_group" "albtg" {
   }
 }
 
+
+
+#Creating target group attachment
 resource "aws_lb_target_group_attachment" "test" {
   target_group_arn = aws_alb_target_group.albtg.arn
-  target_id        = data.terraform_remote_state.level1.outputs.instance
+  target_id        = var.instance_id
   port             = 80
 }

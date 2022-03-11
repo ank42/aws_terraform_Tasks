@@ -3,3 +3,8 @@ module "ec2" {
 
 }
 
+module "alb" {
+  source = "../modules/alb"
+  instance_id = module.ec2.instance_id
+
+}
