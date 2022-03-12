@@ -53,7 +53,6 @@ resource "aws_lb_listener" "front_end" {
     type             = "forward"
     target_group_arn = aws_alb_target_group.albtg.arn
   }
-
 }
 
 #create target groups
