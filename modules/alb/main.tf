@@ -10,7 +10,7 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-ingress {
+  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -36,7 +36,7 @@ resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets = [data.terraform_remote_state.level1.outputs.public_subnet_id[1],data.terraform_remote_state.level1.outputs.public_subnet_id[0] ]
+  subnets            = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
   tags = {
     Name = "custom-alb"
   }
@@ -52,7 +52,7 @@ resource "aws_lb_listener" "front_end" {
     type             = "forward"
     target_group_arn = aws_alb_target_group.albtg.arn
   }
-  
+
 }
 
 #create target groups
@@ -60,7 +60,7 @@ resource "aws_alb_target_group" "albtg" {
   name     = "albtg"
   port     = 80
   protocol = "HTTP"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id   = data.terraform_remote_state.level1.outputs.vpc_id
 
   health_check {
     port     = 80
