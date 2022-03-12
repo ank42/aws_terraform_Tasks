@@ -7,5 +7,4 @@ output "instance_id" {
 output "instance_public_ip" {
   description = "instance ID"
   value       = aws_instance.Dev.public_ip
-
 }
