@@ -74,8 +74,6 @@ resource "aws_alb_target_group" "albtg" {
   }
 }
 
-
-
 #Creating target group attachment
 resource "aws_lb_target_group_attachment" "test" {
   target_group_arn = aws_alb_target_group.albtg.arn
