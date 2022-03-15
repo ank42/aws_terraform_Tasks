@@ -8,18 +8,14 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
-resource "aws_launch_template" "t3micro-template" {
+resource "aws_launch_template" "t3micro" {
   name_prefix   = "t3micro"
-  image_id      = "ami-0359b3157f016ae46"
+  image_id      = data.aws_ami.amazon-linux-2.id
   instance_type = "t3.micro"
-  key_name                    = "MyKeyPair"
-  network_interfaces {
-    associate_public_ip_address = true
-  }
-
+  key_name      = "MyKeyPair"
 
   tags = {
-    Name = "1stasg"
+    Name = "Test-LaunchTemplate"
   }
 }
 
@@ -32,50 +28,7 @@ resource "aws_autoscaling_group" "MyASG" {
   vpc_zone_identifier = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
 
   launch_template {
-    id      = aws_launch_template.t3micro-template.id
+    id      = aws_launch_template.t3micro.id
     version = "$Latest"
   }
 }
-
-/*
-resource "aws_security_group" "main" {
-  name        = "main"
-  description = "Allow inbound traffic"
-  vpc_id      = data.terraform_remote_state.level1.outputs.vpc_id
-
-  ingress {
-    description = "SSH from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["100.1.180.196/32"]
-  }
-  ingress {
-    description = "SSH from VPC"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["100.1.180.196/32"]
-  }
-
-  ingress {
-    description = "Allow internal traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  tags = {
-    Name = "main"
-  }
-}
-*/
