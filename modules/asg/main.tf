@@ -25,7 +25,7 @@ resource "aws_autoscaling_group" "MyASG" {
   desired_capacity   = 3
   max_size           = 5
   min_size           = 3
-  vpc_zone_identifier = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
+  vpc_zone_identifier = [var.subnet_ids[1], var.subnet_ids[0]]
 
   launch_template {
     id      = aws_launch_template.t3micro.id
