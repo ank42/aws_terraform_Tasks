@@ -21,10 +21,10 @@ resource "aws_launch_template" "t3micro" {
 
 
 resource "aws_autoscaling_group" "MyASG" {
-  
-  desired_capacity   = 3
-  max_size           = 5
-  min_size           = 3
+
+  desired_capacity    = 3
+  max_size            = 5
+  min_size            = 3
   vpc_zone_identifier = [var.subnet_ids[1], var.subnet_ids[0]]
 
   launch_template {
