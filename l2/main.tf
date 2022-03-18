@@ -22,7 +22,8 @@ module "alb" {
 }
 
 module "asg" {
-  source     = "../modules/asg"
-  subnet_ids = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
+  source               = "../modules/asg"
+  subnet_ids           = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
+  alb_target_group_arn = module.alb.alb_target_group_arn
 
 }

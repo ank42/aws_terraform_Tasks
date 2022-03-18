@@ -17,6 +17,8 @@ resource "aws_launch_template" "t3micro" {
   tags = {
     Name = "Test-LaunchTemplate"
   }
+  user_data = filebase64("${path.module}/data.sh")
+  
 }
 
 
@@ -26,6 +28,7 @@ resource "aws_autoscaling_group" "MyASG" {
   max_size            = 5
   min_size            = 3
   vpc_zone_identifier = [var.subnet_ids[1], var.subnet_ids[0]]
+  target_group_arns = [var.alb_target_group_arn]
 
   launch_template {
     id      = aws_launch_template.t3micro.id
