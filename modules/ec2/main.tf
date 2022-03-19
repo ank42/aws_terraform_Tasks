@@ -41,6 +41,7 @@ resource "aws_security_group" "main" {
     protocol    = "tcp"
     cidr_blocks = ["100.1.180.196/32"]
   }
+
   ingress {
     description = "SSH from VPC"
     from_port   = 80

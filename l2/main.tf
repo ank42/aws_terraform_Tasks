@@ -11,7 +11,6 @@ module "ec2" {
   source     = "../modules/ec2"
   vpc_ids    = data.terraform_remote_state.level1.outputs.vpc_id
   subnet_ids = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
-
 }
 
 module "alb" {
@@ -23,7 +22,7 @@ module "alb" {
 
 module "asg" {
   source               = "../modules/asg"
-  subnet_ids           = [data.terraform_remote_state.level1.outputs.public_subnet_id[1], data.terraform_remote_state.level1.outputs.public_subnet_id[0]]
+  private_subnet_ids   = [data.terraform_remote_state.level1.outputs.private_subnet[0], data.terraform_remote_state.level1.outputs.private_subnet[0]]
   alb_target_group_arn = module.alb.alb_target_group_arn
-
+  vpc_ids              = data.terraform_remote_state.level1.outputs.vpc_id
 }

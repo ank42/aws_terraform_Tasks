@@ -52,7 +52,6 @@ resource "aws_lb_listener" "front_end" {
     type             = "forward"
     target_group_arn = aws_alb_target_group.albtg.arn
   }
-
 }
 
 #create target groups
@@ -73,8 +72,6 @@ resource "aws_alb_target_group" "albtg" {
     Name = "target_group"
   }
 }
-
-
 
 #Creating target group attachment
 resource "aws_lb_target_group_attachment" "test" {
