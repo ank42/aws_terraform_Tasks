@@ -37,6 +37,7 @@ resource "aws_lb" "alb" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = [var.subnet_ids[0], var.subnet_ids[1]]
+
   tags = {
     Name = "custom-alb"
   }
