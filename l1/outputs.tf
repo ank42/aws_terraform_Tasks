@@ -7,3 +7,8 @@ output "vpc_id" {
   description = "VPC ID"
   value       = module.vpc.vpc_id
 }
+
+output "private_subnet" {
+  description = "Private Subnet ID"
+  value       = module.vpc.private_subnet
+}

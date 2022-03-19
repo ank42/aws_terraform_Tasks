@@ -11,7 +11,7 @@ data "aws_ami" "amazon-linux-2" {
 resource "aws_instance" "Dev" {
   ami                         = data.aws_ami.amazon-linux-2.id
   instance_type               = "t3.micro"
-  subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet_id[1]
+  subnet_id                   = var.subnet_ids[0]
   security_groups             = [aws_security_group.main.id]
   key_name                    = "MyKeyPair"
   associate_public_ip_address = true
@@ -32,7 +32,7 @@ EOF
 resource "aws_security_group" "main" {
   name        = "main"
   description = "Allow inbound traffic"
-  vpc_id      = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id      = var.vpc_ids
 
   ingress {
     description = "SSH from VPC"
@@ -41,6 +41,7 @@ resource "aws_security_group" "main" {
     protocol    = "tcp"
     cidr_blocks = ["100.1.180.196/32"]
   }
+
   ingress {
     description = "SSH from VPC"
     from_port   = 80
