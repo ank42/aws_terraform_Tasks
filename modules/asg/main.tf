@@ -24,7 +24,7 @@ resource "aws_security_group" "asg_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   ingress {
@@ -56,7 +56,7 @@ resource "aws_launch_template" "t3micro" {
   user_data              = filebase64("${path.module}/data.sh")
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.S3_profile.name
+    name = aws_iam_instance_profile.S3_fullaccess.name
   }
 
   tags = {
@@ -77,7 +77,7 @@ resource "aws_autoscaling_group" "MyASG" {
   }
 }
 
-resource "aws_iam_instance_profile" "S3_profile" {
+resource "aws_iam_instance_profile" "S3_fullaccess" {
   name = "S3_profile"
   role = aws_iam_role.S3_fullaccess.name
 }
