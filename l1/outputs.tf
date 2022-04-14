@@ -12,3 +12,9 @@ output "private_subnet" {
   description = "Private Subnet ID"
   value       = module.vpc.private_subnet
 }
+
+output "vpc_cidr" {
+  description = "vpc cidr output"
+  value = module.vpc.vpc_cidr
+  
+}

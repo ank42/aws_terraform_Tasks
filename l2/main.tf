@@ -25,4 +25,5 @@ module "asg" {
   private_subnet_ids   = [data.terraform_remote_state.level1.outputs.private_subnet[0], data.terraform_remote_state.level1.outputs.private_subnet[0]]
   alb_target_group_arn = module.alb.alb_target_group_arn
   vpc_ids              = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_cidr             = data.terraform_remote_state.level1.outputs.vpc_cidr
 }
