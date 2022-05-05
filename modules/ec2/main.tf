@@ -9,10 +9,10 @@ data "aws_ami" "amazon-linux-2" {
 }
 
 resource "aws_instance" "Dev" {
-  ami                         = data.aws_ami.amazon-linux-2.id
-  instance_type               = "t3.micro"
-  subnet_id                   = var.subnet_ids[0]
-  security_groups             = [aws_security_group.main.id]
+  ami             = data.aws_ami.amazon-linux-2.id
+  instance_type   = "t3.micro"
+  subnet_id       = var.subnet_ids[0]
+  security_groups = [aws_security_group.main.id]
   #key_name                    = "MyKeyPair"
   associate_public_ip_address = true
   user_data                   = <<EOF

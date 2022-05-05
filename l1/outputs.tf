@@ -15,6 +15,6 @@ output "private_subnet" {
 
 output "vpc_cidr" {
   description = "vpc cidr output"
-  value = module.vpc.vpc_cidr
-  
+  value       = module.vpc.vpc_cidr
+
 }

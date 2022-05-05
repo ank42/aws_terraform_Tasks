@@ -20,7 +20,7 @@ resource "aws_security_group" "asg_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-# removed port 22
+  # removed port 22
 
   ingress {
     from_port   = 443
@@ -45,7 +45,7 @@ resource "aws_security_group" "asg_sg" {
 resource "aws_launch_template" "t3micro" {
   name_prefix            = "t3micro"
   image_id               = data.aws_ami.amazon-linux-2.id
-  instance_type          = "t3.micro"                       #Removed key variable
+  instance_type          = "t3.micro" #Removed key variable
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   user_data              = filebase64("${path.module}/data.sh")
 
@@ -77,27 +77,27 @@ resource "aws_iam_instance_profile" "SSM_fullaccess" {
 }
 
 resource "aws_iam_role" "SSM_fullaccess" {
-  name = "SSM_fullaccess"
+  name                = "SSM_fullaccess"
   managed_policy_arns = ["arn:aws:iam::aws:policy/AmazonSSMFullAccess"]
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
-  assume_role_policy =jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "sts:AssumeRole"
-            ],
-            "Principal": {
-                "Service": [
-                    "ec2.amazonaws.com"
-                ]
-            }
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "sts:AssumeRole"
+        ],
+        "Principal" : {
+          "Service" : [
+            "ec2.amazonaws.com"
+          ]
         }
+      }
     ]
-})
+  })
 
   tags = {
     Name = "S3Access"
