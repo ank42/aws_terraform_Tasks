@@ -20,8 +20,6 @@ resource "aws_security_group" "asg_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # removed port 22
-
   ingress {
     from_port   = 443
     to_port     = 443
@@ -45,7 +43,7 @@ resource "aws_security_group" "asg_sg" {
 resource "aws_launch_template" "t3micro" {
   name_prefix            = "t3micro"
   image_id               = data.aws_ami.amazon-linux-2.id
-  instance_type          = "t3.micro" #Removed key variable
+  instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.asg_sg.id]
   user_data              = filebase64("${path.module}/data.sh")
 
