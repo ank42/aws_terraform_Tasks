@@ -30,10 +30,7 @@ resource "aws_subnet" "Private" {
     Name = "private${count.index}"
   }
 }
-output "private_subnet_id" {
-  description = "Private Subnet ID"
-  value       = aws_subnet.Private.*.id
-}
+
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
