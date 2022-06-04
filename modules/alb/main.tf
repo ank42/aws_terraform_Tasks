@@ -43,6 +43,18 @@ resource "aws_lb" "alb" {
   }
 }
 
+resource "aws_route53_zone" "primary" {
+  name = "myworkspace.link"
+}
+
+#DNS name allocation to alb
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.primary.zone_id
+  name    = "www.myworkspace.link"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_lb.alb.dns_name]
+}
 #Listener 
 resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.alb.arn
