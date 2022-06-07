@@ -27,3 +27,9 @@ module "asg" {
   vpc_ids              = data.terraform_remote_state.level1.outputs.vpc_id
   vpc_cidr             = data.terraform_remote_state.level1.outputs.vpc_cidr
 }
+
+module "rds" {
+  source             = "../modules/rds"
+  private_subnet_ids = [data.terraform_remote_state.level1.outputs.private_subnet[1], data.terraform_remote_state.level1.outputs.private_subnet[0]]
+
+}
